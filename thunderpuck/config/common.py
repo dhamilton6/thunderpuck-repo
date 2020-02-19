@@ -21,13 +21,18 @@ class Common(Configuration):
         "django.contrib.sessions",
         "django.contrib.messages",
         "django.contrib.staticfiles",
+        'django.contrib.gis',
         # Third party apps
         "rest_framework",  # utilities for rest apis
         "rest_framework.authtoken",  # token authentication
         "django_filters",  # for filtering rest endpoints
         "django_generate_secret_key",
+        "cities",
+        "thunderpuck.world",
         # Your apps
         "thunderpuck.users",
+        "thunderpuck.teams",
+        "thunderpuck.leagues",
     )
 
     # https://docs.djangoproject.com/en/2.0/topics/http/middleware/
@@ -57,6 +62,7 @@ class Common(Configuration):
         "default": dj_database_url.config(
             default="postgres://postgres:@postgres:5432/postgres",
             conn_max_age=int(env("POSTGRES_CONN_MAX_AGE", default=600)),
+            engine='django.contrib.gis.db.backends.postgis',
         )
     }
 
@@ -181,3 +187,10 @@ class Common(Configuration):
             "rest_framework.authentication.TokenAuthentication",
         ),
     }
+
+    CITIES_POSTAL_CODES = ['ALL']
+    CITIES_LOCALES = ['ALL']
+
+    CITIES_PLUGINS = [
+        'cities.plugin.postal_code_ca.Plugin',  # Canada postal codes need region codes remapped to match geonames
+    ]
